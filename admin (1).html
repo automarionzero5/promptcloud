@@ -1,0 +1,94 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin PromptCloud</title>
+  <style>
+    body { font-family: sans-serif; max-width: 800px; margin: auto; padding: 20px; background: #f8f9fa; }
+    h1 { color: #333; }
+    input, textarea { width: 100%; padding: 8px; margin-bottom: 10px; }
+    button { padding: 10px 20px; margin-right: 10px; }
+    .prompt { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; background: white; }
+    .prompt h3 { margin: 0 0 5px 0; }
+  </style>
+</head>
+<body>
+  <h1>Administração de Prompts - Automation Zero</h1>
+
+  <h2>Adicionar Novo Prompt</h2>
+  <input type="text" id="titulo" placeholder="Título do Prompt">
+  <textarea id="descricao" placeholder="Descrição do Prompt"></textarea>
+  <button onclick="adicionarPrompt()">Adicionar</button>
+
+  <h2>Lista de Prompts</h2>
+  <div id="listaPrompts"></div>
+
+  <button onclick="baixarJSON()">📥 Baixar prompts.json</button>
+
+  <script>
+    let prompts = [];
+
+    async function carregarPrompts() {
+      try {
+        const res = await fetch("prompts.json");
+        prompts = await res.json();
+        renderizarLista();
+      } catch (err) {
+        console.error("Erro ao carregar prompts:", err);
+      }
+    }
+
+    function renderizarLista() {
+      const container = document.getElementById("listaPrompts");
+      container.innerHTML = "";
+
+      prompts.forEach((item, index) => {
+        const div = document.createElement("div");
+        div.className = "prompt";
+        div.innerHTML = \`
+          <h3>\${item.titulo}</h3>
+          <p>\${item.descricao}</p>
+          <button onclick="removerPrompt(\${index})">Remover</button>
+        \`;
+        container.appendChild(div);
+      });
+    }
+
+    function adicionarPrompt() {
+      const titulo = document.getElementById("titulo").value.trim();
+      const descricao = document.getElementById("descricao").value.trim();
+
+      if (!titulo || !descricao) {
+        alert("Preencha ambos os campos.");
+        return;
+      }
+
+      prompts.push({ titulo, descricao });
+      renderizarLista();
+
+      document.getElementById("titulo").value = "";
+      document.getElementById("descricao").value = "";
+    }
+
+    function removerPrompt(index) {
+      if (confirm("Tem certeza que deseja remover este prompt?")) {
+        prompts.splice(index, 1);
+        renderizarLista();
+      }
+    }
+
+    function baixarJSON() {
+      const blob = new Blob([JSON.stringify(prompts, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "prompts.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    carregarPrompts();
+  </script>
+</body>
+</html>
