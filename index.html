@@ -1,0 +1,51 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PromptCloud - Biblioteca de Prompts</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f4f4f4; }
+    h1 { color: #333; }
+    input[type="text"] { padding: 8px; width: 100%; max-width: 400px; margin-bottom: 20px; }
+    .prompt-card { background: #fff; padding: 15px; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
+  </style>
+</head>
+<body>
+  <h1>📚 PromptCloud</h1>
+  <p>Busque prompts por palavra-chave:</p>
+  <input type="text" id="searchInput" placeholder="Ex: Instagram, vendas, email..." />
+
+  <div id="promptList"></div>
+
+  <script>
+    let prompts = [];
+
+    async function fetchPrompts() {
+      const response = await fetch('prompts.json');
+      prompts = await response.json();
+      renderPrompts(prompts);
+    }
+
+    function renderPrompts(data) {
+      const list = document.getElementById("promptList");
+      list.innerHTML = "";
+      data.forEach(prompt => {
+        const card = document.createElement("div");
+        card.className = "prompt-card";
+        card.innerHTML = `<strong>${prompt.titulo}</strong><p>${prompt.texto}</p>`;
+        list.appendChild(card);
+      });
+    }
+
+    document.getElementById("searchInput").addEventListener("input", function () {
+      const q = this.value.toLowerCase();
+      const filtered = prompts.filter(p => p.titulo.toLowerCase().includes(q) || p.texto.toLowerCase().includes(q));
+      renderPrompts(filtered);
+    });
+
+    fetchPrompts();
+  </script>
+</body>
+</html>
