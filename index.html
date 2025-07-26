@@ -1,49 +1,153 @@
-
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>PromptCloud - Biblioteca de Prompts</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PromptCloud | AutomationZero</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; background: #f4f4f4; }
-    h1 { color: #333; }
-    input[type="text"] { padding: 8px; width: 100%; max-width: 400px; margin-bottom: 20px; }
-    .prompt-card { background: #fff; padding: 15px; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #0e0e1a;
+      color: #ffffff;
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      color: #42a5f5;
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+    p {
+      font-size: 1.1rem;
+      max-width: 700px;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .search-bar {
+      margin-bottom: 2rem;
+      width: 100%;
+      max-width: 500px;
+    }
+    input[type="text"] {
+      padding: 0.75rem;
+      width: 100%;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      transition: box-shadow 0.3s ease;
+    }
+    input[type="text"]:focus {
+      box-shadow: 0 0 0 3px #42a5f577;
+    }
+    .categoria {
+      margin-top: 2rem;
+      width: 100%;
+      max-width: 800px;
+    }
+    .categoria h2 {
+      color: #66bb6a;
+      border-bottom: 2px solid #66bb6a;
+      padding-bottom: 0.3rem;
+    }
+    ul {
+      list-style: none;
+      padding-left: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+    li {
+      background-color: #1e1e2f;
+      padding: 1rem;
+      border-radius: 8px;
+      transition: transform 0.2s ease;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    li:hover {
+      transform: translateY(-3px);
+      background-color: #292940;
+    }
+    .copy-btn {
+      background-color: #42a5f5;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 5px 10px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+    .copy-btn:hover {
+      background-color: #1e88e5;
+    }
   </style>
 </head>
 <body>
   <h1>📚 PromptCloud</h1>
-  <p>Busque prompts por palavra-chave:</p>
-  <input type="text" id="searchInput" placeholder="Ex: Instagram, vendas, email..." />
+  <p>Explore nossa biblioteca de prompts profissionais, desenvolvidos para impulsionar resultados reais em múltiplas áreas.</p>
 
-  <div id="promptList"></div>
+  <div class="search-bar">
+    <input type="text" id="search" placeholder="🔍 Buscar prompts..." oninput="buscarPrompts()" />
+  </div>
+
+  <div id="conteudo"></div>
 
   <script>
-    let prompts = [];
+    let dados = {};
+    let dadosFiltrados = {};
 
-    async function fetchPrompts() {
-      const response = await fetch('prompts.json');
-      prompts = await response.json();
-      renderPrompts(prompts);
+    async function carregarPrompts() {
+      try {
+        const resposta = await fetch("https://automarionzero5.github.io/promptcloud/promptcloud_profissionais.json");
+        const json = await resposta.json();
+        dados = json;
+        dadosFiltrados = JSON.parse(JSON.stringify(json));
+        exibirPrompts();
+      } catch (erro) {
+        document.getElementById("conteudo").innerHTML = "Erro ao carregar prompts.";
+        console.error("Erro:", erro);
+      }
     }
 
-    function renderPrompts(data) {
-      const list = document.getElementById("promptList");
-      list.innerHTML = "";
-      data.forEach(prompt => {
-        const card = document.createElement("div");
-        card.className = "prompt-card";
-        card.innerHTML = `<strong>${prompt.titulo}</strong><p>${prompt.texto}</p>`;
-        list.appendChild(card);
+    function buscarPrompts() {
+      const termo = document.getElementById("search").value.toLowerCase();
+      dadosFiltrados.categorias = dados.categorias.map(cat => {
+        return {
+          nome: cat.nome,
+          prompts: cat.prompts.filter(p => p.toLowerCase().includes(termo))
+        };
+      }).filter(cat => cat.prompts.length > 0);
+      exibirPrompts();
+    }
+
+    function exibirPrompts() {
+      const conteudo = document.getElementById("conteudo");
+      conteudo.innerHTML = "";
+      dadosFiltrados.categorias.forEach(cat => {
+        const div = document.createElement("div");
+        div.className = "categoria";
+        const lista = cat.prompts.map(p => `<li><span>${p}</span><button class="copy-btn" onclick="copiarPrompt(\`${p.replace(/`/g, '\`')}\`)">Copiar</button></li>`).join("");
+        div.innerHTML = `<h2>${cat.nome}</h2><ul>${lista}</ul>`;
+        conteudo.appendChild(div);
       });
     }
 
-    document.getElementById("searchInput").addEventListener("input", function () {
-      const q = this.value.toLowerCase();
-      const filtered = prompts.filter(p => p.titulo.toLowerCase().includes(q) || p.texto.toLowerCase().includes(q));
-      renderPrompts(filtered);
-    });
+    function copiarPrompt(texto) {
+      navigator.clipboard.writeText(texto).then(() => {
+        alert("Prompt copiado para a área de transferência!");
+      });
+    }
+
+    carregarPrompts();
+  </script>
+</body>
+</html>
+
 
     fetchPrompts();
   </script>
