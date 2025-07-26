@@ -31,16 +31,16 @@
       width: 100%;
       max-width: 500px;
     }
-    input[type="text"] {
+    input[type="text"], input[type="email"], input[type="password"] {
       padding: 0.75rem;
       width: 100%;
       font-size: 1rem;
       border-radius: 8px;
       border: none;
       outline: none;
-      transition: box-shadow 0.3s ease;
+      margin-bottom: 1rem;
     }
-    input[type="text"]:focus {
+    input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
       box-shadow: 0 0 0 3px #42a5f577;
     }
     .categoria {
@@ -85,19 +85,69 @@
     .copy-btn:hover {
       background-color: #1e88e5;
     }
+    #login-form {
+      max-width: 400px;
+      width: 100%;
+    }
+    #conteudo, .search-bar, #logout {
+      display: none;
+    }
+    #logout {
+      margin-top: 2rem;
+      cursor: pointer;
+      color: #f44336;
+    }
   </style>
 </head>
 <body>
   <h1>📚 PromptCloud</h1>
   <p>Explore nossa biblioteca de prompts profissionais, desenvolvidos para impulsionar resultados reais em múltiplas áreas.</p>
 
+  <div id="login-form">
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="senha" placeholder="Senha" />
+    <button onclick="login()" class="copy-btn" style="width: 100%;">Entrar</button>
+  </div>
+
   <div class="search-bar">
     <input type="text" id="search" placeholder="🔍 Buscar prompts..." oninput="buscarPrompts()" />
   </div>
 
   <div id="conteudo"></div>
+  <div id="logout" onclick="logout()">Sair</div>
 
   <script>
+    const credenciais = {
+      email: "caio@automationzero.com",
+      senha: "admin22M@"
+    };
+
+    if (localStorage.getItem("autenticado") === "true") mostrarPromptCloud();
+
+    function login() {
+      const email = document.getElementById("email").value;
+      const senha = document.getElementById("senha").value;
+      if (email === credenciais.email && senha === credenciais.senha) {
+        localStorage.setItem("autenticado", "true");
+        mostrarPromptCloud();
+      } else {
+        alert("Email ou senha incorretos.");
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem("autenticado");
+      location.reload();
+    }
+
+    function mostrarPromptCloud() {
+      document.getElementById("login-form").style.display = "none";
+      document.querySelector(".search-bar").style.display = "block";
+      document.getElementById("conteudo").style.display = "block";
+      document.getElementById("logout").style.display = "block";
+      carregarPrompts();
+    }
+
     let dados = {};
     let dadosFiltrados = {};
 
@@ -142,14 +192,6 @@
         alert("Prompt copiado para a área de transferência!");
       });
     }
-
-    carregarPrompts();
-  </script>
-</body>
-</html>
-
-
-    fetchPrompts();
   </script>
 </body>
 </html>
