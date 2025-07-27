@@ -1,0 +1,47 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PromptCloud | AutomationZero</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>📚 PromptCloud</h1>
+    <p>Assine um plano para acessar os prompts profissionais da AutomationZero.</p>
+
+    <div class="auth">
+      <div class="signup">
+        <h2>Cadastro</h2>
+        <input type="email" id="signup-email" placeholder="Novo email" />
+        <input type="password" id="signup-password" placeholder="Nova senha" />
+        <button onclick="signUp()">Cadastrar</button>
+      </div>
+
+      <div class="login">
+        <h2>Login</h2>
+        <input type="email" id="login-email" placeholder="Email" />
+        <input type="password" id="login-password" placeholder="Senha" />
+        <button onclick="login()">Entrar</button>
+      </div>
+    </div>
+
+    <div class="plans">
+      <h2>Planos de Assinatura</h2>
+      <table>
+        <tr><th>Plano</th><th>Preço</th><th>Descrição</th><th></th></tr>
+        <tr><td>Starter</td><td>R$19/mês</td><td>100 prompts fixos, uso pessoal.</td><td><a href="https://pagseguro.uol.com.br/v2/checkout/payment.html" target="_blank">Assinar</a></td></tr>
+        <tr><td>Pro</td><td>R$49/mês</td><td>500 prompts, atualizações mensais, acesso por categorias.</td><td><a href="https://pagseguro.uol.com.br/v2/checkout/payment.html" target="_blank">Assinar</a></td></tr>
+        <tr><td>Premium</td><td>R$99/mês</td><td>+1.000 prompts, novos toda semana, tutoriais, suporte.</td><td><a href="https://pagseguro.uol.com.br/v2/checkout/payment.html" target="_blank">Assinar</a></td></tr>
+        <tr><td>Empresarial</td><td>R$199/mês</td><td>Acesso para equipes, prompts personalizados, integração.</td><td><a href="https://pagseguro.uol.com.br/v2/checkout/payment.html" target="_blank">Assinar</a></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
