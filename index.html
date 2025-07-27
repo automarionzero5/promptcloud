@@ -3,187 +3,147 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>PromptCloud | AutomationZero</title>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <title>PromptCloud | Área de Membros</title>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #0e0e1a;
-      color: #ffffff;
-      margin: 0;
+      background: #0e0e1a;
+      color: white;
+      font-family: sans-serif;
       padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    h1 {
-      color: #42a5f5;
-      font-size: 2.5rem;
+      text-align: center;
     }
     input, button {
-      padding: 0.75rem;
-      margin: 0.5rem 0;
-      font-size: 1rem;
-      width: 100%;
-      max-width: 400px;
-      border-radius: 8px;
+      padding: 0.8rem;
+      margin: 0.4rem;
       border: none;
-    }
-    button {
-      background-color: #42a5f5;
-      color: white;
-      cursor: pointer;
-    }
-    #conteudo, .search-bar, #logout {
-      display: none;
-    }
-    .categoria {
-      margin-top: 2rem;
-      max-width: 800px;
-      width: 100%;
-    }
-    .categoria h2 {
-      color: #66bb6a;
-      border-bottom: 2px solid #66bb6a;
-    }
-    ul {
-      list-style: none;
-      padding-left: 0;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1rem;
-    }
-    li {
-      background-color: #1e1e2f;
-      padding: 1rem;
       border-radius: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      font-size: 1rem;
     }
-    .copy-btn {
+    .hidden { display: none; }
+    .container { max-width: 600px; margin: auto; }
+    .planos { margin-top: 2rem; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #1a1a2e;
+    }
+    th, td {
+      padding: 1rem;
+      border: 1px solid #444;
+    }
+    th { background-color: #2d2d44; }
+    .btn-pagamento {
       background: #42a5f5;
       color: white;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 5px;
-      font-size: 0.8rem;
-      cursor: pointer;
-    }
-    #logout {
-      margin-top: 2rem;
-      cursor: pointer;
-      color: #f44336;
+      text-decoration: none;
+      padding: 0.6rem 1rem;
+      border-radius: 6px;
+      display: inline-block;
+      margin-top: 0.5rem;
     }
   </style>
 </head>
 <body>
-  <h1>📚 PromptCloud</h1>
 
-  <div id="auth-area">
-    <input type="email" id="email" placeholder="Email" />
-    <input type="password" id="senha" placeholder="Senha" />
-    <button onclick="entrar()">Entrar</button>
-    <button onclick="cadastrar()">Cadastrar</button>
+  <div class="container">
+    <h1>📚 PromptCloud</h1>
+    <p>Cadastre-se ou entre para acessar os melhores prompts do mercado!</p>
+
+    <!-- FORMULÁRIOS -->
+    <div id="auth-area">
+      <h2>Criar Conta</h2>
+      <input type="email" id="signup-email" placeholder="Email" /><br/>
+      <input type="password" id="signup-senha" placeholder="Senha" /><br/>
+      <button onclick="cadastrar()">Cadastrar</button>
+
+      <h2>Já tem conta?</h2>
+      <input type="email" id="login-email" placeholder="Email" /><br/>
+      <input type="password" id="login-senha" placeholder="Senha" /><br/>
+      <button onclick="logar()">Entrar</button>
+    </div>
+
+    <!-- TABELA DE PLANOS -->
+    <div class="planos" id="tabela-planos">
+      <h2>Planos de Assinatura</h2>
+      <table>
+        <thead>
+          <tr><th>Plano</th><th>Preço</th><th>Descrição</th><th></th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Starter</td><td>R$19/mês</td><td>100 prompts fixos, uso pessoal.</td>
+            <td><a class="btn-pagamento" href="https://pag.ae/7_U83ceKn" target="_blank">Assinar</a></td>
+          </tr>
+          <tr>
+            <td>Pro</td><td>R$49/mês</td><td>500 prompts, atualizações mensais, categorias.</td>
+            <td><a class="btn-pagamento" href="https://pag.ae/7_U84my15" target="_blank">Assinar</a></td>
+          </tr>
+          <tr>
+            <td>Premium</td><td>R$99/mês</td><td>+1.000 prompts, novos toda semana, suporte.</td>
+            <td><a class="btn-pagamento" href="https://pag.ae/7_U851eKu" target="_blank">Assinar</a></td>
+          </tr>
+          <tr>
+            <td>Empresarial</td><td>R$199/mês</td><td>Equipes, prompts personalizados, integração.</td>
+            <td><a class="btn-pagamento" href="https://pag.ae/7_U85xk2H" target="_blank">Assinar</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ÁREA DE MEMBROS -->
+    <div id="membros" class="hidden">
+      <h2>🎉 Bem-vindo à PromptCloud!</h2>
+      <p>Explore os prompts clicando no botão abaixo.</p>
+      <a href="promptcloud.html" class="btn-pagamento">Acessar PromptCloud</a><br/><br/>
+      <button onclick="logout()">Sair</button>
+    </div>
   </div>
 
-  <div class="search-bar">
-    <input type="text" id="search" placeholder="🔍 Buscar prompts..." oninput="buscarPrompts()" />
-  </div>
-
-  <div id="conteudo"></div>
-  <div id="logout" onclick="logout()">Sair</div>
-
+  <!-- FIREBASE CONFIG -->
   <script>
-    // Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyBWN1eIWWGSZKu863gLCbZ4VvtdzIr-rHw",
       authDomain: "promptcloud-f066d.firebaseapp.com",
       projectId: "promptcloud-f066d",
-      storageBucket: "promptcloud-f066d.firebasestorage.app",
-      messagingSenderId: "61708372408",
-      appId: "1:61708372408:web:8f6fc1e5881bdae6f4674d"
-      measurementId: "G-Q3DP8KSZEL"
     };
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        mostrarPromptCloud();
-      } else {
-        document.getElementById("auth-area").style.display = "block";
-      }
-    });
-
-    function entrar() {
-      const email = document.getElementById("email").value;
-      const senha = document.getElementById("senha").value;
-      auth.signInWithEmailAndPassword(email, senha).catch(e => alert("Erro: " + e.message));
+    function cadastrar() {
+      const email = document.getElementById('signup-email').value;
+      const senha = document.getElementById('signup-senha').value;
+      auth.createUserWithEmailAndPassword(email, senha)
+        .then(() => alert('Cadastro realizado com sucesso!'))
+        .catch(e => alert('Erro ao cadastrar: ' + e.message));
     }
 
-    function cadastrar() {
-      const email = document.getElementById("email").value;
-      const senha = document.getElementById("senha").value;
-      auth.createUserWithEmailAndPassword(email, senha).catch(e => alert("Erro: " + e.message));
+    function logar() {
+      const email = document.getElementById('login-email').value;
+      const senha = document.getElementById('login-senha').value;
+      auth.signInWithEmailAndPassword(email, senha)
+        .then(() => mostrarMembros())
+        .catch(e => alert('Erro ao entrar: ' + e.message));
     }
 
     function logout() {
-      auth.signOut();
-      location.reload();
+      auth.signOut().then(() => location.reload());
     }
 
-    function mostrarPromptCloud() {
-      document.getElementById("auth-area").style.display = "none";
-      document.querySelector(".search-bar").style.display = "block";
-      document.getElementById("conteudo").style.display = "block";
-      document.getElementById("logout").style.display = "block";
-      carregarPrompts();
+    function mostrarMembros() {
+      document.getElementById('auth-area').style.display = 'none';
+      document.getElementById('tabela-planos').style.display = 'none';
+      document.getElementById('membros').classList.remove('hidden');
     }
 
-    let dados = {};
-    let dadosFiltrados = {};
+    auth.onAuthStateChanged(user => {
+      if (user) mostrarMembros();
+    });
+  </script>
+</body>
+</html>
 
-    async function carregarPrompts() {
-      try {
-        const resposta = await fetch("https://automarionzero5.github.io/promptcloud/promptcloud_profissionais.json");
-        const json = await resposta.json();
-        dados = json;
-        dadosFiltrados = JSON.parse(JSON.stringify(json));
-        exibirPrompts();
-      } catch (erro) {
-        document.getElementById("conteudo").innerHTML = "Erro ao carregar prompts.";
-      }
-    }
-
-    function buscarPrompts() {
-      const termo = document.getElementById("search").value.toLowerCase();
-      dadosFiltrados.categorias = dados.categorias.map(cat => {
-        return {
-          nome: cat.nome,
-          prompts: cat.prompts.filter(p => p.toLowerCase().includes(termo))
-        };
-      }).filter(cat => cat.prompts.length > 0);
-      exibirPrompts();
-    }
-
-    function exibirPrompts() {
-      const conteudo = document.getElementById("conteudo");
-      conteudo.innerHTML = "";
-      dadosFiltrados.categorias.forEach(cat => {
-        const div = document.createElement("div");
-        div.className = "categoria";
-        const lista = cat.prompts.map(p => `<li><span>${p}</span><button class="copy-btn" onclick="copiarPrompt(\`${p.replace(/`/g, '\\`')}\`)">Copiar</button></li>`).join("");
-        div.innerHTML = `<h2>${cat.nome}</h2><ul>${lista}</ul>`;
-        conteudo.appendChild(div);
-      });
-    }
-
-    function copiarPrompt(texto) {
-      navigator.clipboard.writeText(texto).then(() => {
-        alert("Prompt copiado!");
-      });
     }
   </script>
 </body>
